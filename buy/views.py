@@ -17,7 +17,10 @@ def buy(request):
     my_list = {}
     if request.method == 'POST':
         if form.is_valid():
-            form.save()
+
+            obj, created = Stock.objects.get_or_create(master=request.POST['master'], item=request.POST['item'])
+            obj.quantity = obj.quantity + int(request.POST['quantity'])
+            obj.save()
         my_list = {}
         for i in items:
             total = 0
@@ -73,7 +76,7 @@ def write_pdf(request):
     t = Table(data2)
     t.setStyle(style)
 
-    ptext = '<font size=40>ANNADAATA FOOD CO.OP </font>'
+    ptext = '<font size=40>The Fruit Truck </font>'
     elements.append(Paragraph(ptext, s))
     elements.append(Spacer(1, 20))
 
@@ -87,3 +90,6 @@ def write_pdf(request):
     doc.build(elements)
     shutil.move(name, "buy/static/pdf/"+name)
     return redirect('/buy')
+
+
+# col_1=self.kwargs['value_1'], col_2=self.kwargs['value_2']
