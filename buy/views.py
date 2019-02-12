@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from basic.models import Item, Stock
 import datetime
 import shutil
-
+from .forms import StockForm
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4, landscape
@@ -13,13 +13,21 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 # Create your views here.
 def buy(request):
     items = Item.objects.all()
+    form = StockForm(request.POST)
     my_list = {}
-    for i in items:
-        total = 0
-        for s in Stock.objects.filter(item=i):
-            total += s.quantity
-        my_list.setdefault(i.name, total)
-    return render(request, 'buy/buy.html', {'dict': my_list, 'items': items})
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+        my_list = {}
+        for i in items:
+            total = 0
+            for s in Stock.objects.filter(item=i):
+                total += s.quantity
+            my_list.setdefault(i.name, total)
+        return render(request, 'buy/buy.html', {'dict': my_list, 'items': items, 'form': form})
+    
+    else:
+        return render(request, 'buy/buy.html', {'dict': my_list, 'items': items, 'form': form})
 
 
 def write_pdf(request):

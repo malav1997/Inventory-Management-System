@@ -5,8 +5,18 @@
         This is selling page.
     </h1>
     {% if request.user.is_superuser %}
+   <form name="stockform" action="" method="post">
+        <p2><b>Add Stock:</b> </p2>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Add Stock">
+    </form>
+    {% endif %}
+
+
+    {% if request.user.is_superuser %}
     <form action="{% url 'write_pdf'%}">
-        <input type="submit" value="Save" />
+        <input type="submit" value="Generate PDF" />
     </form>
     {% endif %}
 {% endblock %}
