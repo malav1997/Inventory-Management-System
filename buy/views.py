@@ -17,10 +17,18 @@ def buy(request):
     my_list = {}
     if request.method == 'POST':
         if form.is_valid():
+            item = request.POST['item']
+            master = request.POST['master']
+            stock = Stock.objects.filter(master=master, item=item)
 
-            obj, created = Stock.objects.get_or_create(master=request.POST['master'], item=request.POST['item'])
-            obj.quantity = obj.quantity + int(request.POST['quantity'])
-            obj.save()
+            if stock.exists():
+                obj, created = Stock.objects.get_or_create(master=request.POST['master'], item=request.POST['item'])
+                obj.quantity = obj.quantity + int(request.POST['quantity'])
+                obj.save()
+                
+            else:
+                form.save()
+                
         my_list = {}
         for i in items:
             total = 0
