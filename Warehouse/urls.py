@@ -24,8 +24,8 @@ from basic import views as core_views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^signup/', core_views.signup, name='signup'),
-    url(r'^login/', auth_views.LoginView, name='login'),
-    url(r'^logout/', auth_views.LogoutView, name='logout'),
+    url(r'^login/', auth_views.LoginView.as_view(), name='login'),
+    url(r'^logout/', auth_views.LogoutView.as_view(), name='logout'),
     url(r'^aboutus/', include('aboutus.urls')),
     url(r'^store/', include('store.urls')),
     url(r'^more/', include('more.urls')),
